@@ -51,6 +51,11 @@ Alert Dark Style
     color: #fff;
     background-color: #00c03b;
 }
+
+.padding-profil-picture {
+    padding: 30px;
+    
+}
 .warning-dark {
     color: #fff;
     background-color: #ff9c00;
@@ -2889,3 +2894,4 @@ Vertical Tab
     }
 }
 .fa.fa-eye.show-password.active{display: none;}
+

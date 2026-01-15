@@ -62,7 +62,8 @@ body .log-section form .links a {
 }
 #candidateForm .file-field .btn {
     height: 50px;
-    line-height: 26px
+    line-height: 26px;
+    padding: 50px;
 }
 #candidateForm .file-path {
     margin-top: 1rem

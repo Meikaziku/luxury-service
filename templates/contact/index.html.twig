@@ -28,6 +28,7 @@ if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elain
 check = true;
 
 
+
 })(navigator.userAgent || navigator.vendor || window.opera);
 return check;
 })();
@@ -88,6 +89,10 @@ $(handler);
 
 {% block body %}
 
+	{% for message in app.flashes('success') %}
+		<div class="alert alert-success">{{ message }}</div>
+	{% endfor %}
+
 	<div
 		class="base">
 
@@ -114,6 +119,7 @@ $(handler);
 			</section>
 
 			<!-- Page Content-->
+			{{ form_start(form, {'attr': {'id': 'formContact', 'class': 'light-gray-bg'}}) }}
 			<form method="POST" action="#!" accept-charset="UTF-8" id="formContact" class="light-gray-bg">
 				<input name="_token" type="hidden" value="">
 				<input name="job_id" type="hidden" value="">
@@ -129,50 +135,52 @@ $(handler);
 								<div class="row">
 									<div class="col-md-6">
 										<div class="input-field">
-											<input required="required" name="firstname" type="text">
-											<label for="firstname">First name</label>
+											{{ form_errors(form.first_name) }}
+											{{ form_widget(form.first_name, {'attr': {'class': 'validate'}}) }}
+											{{ form_label(form.first_name) }}
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="input-field">
-											<input required="required" name="lastname" type="text">
-											<label for="lastname">Last name</label>
+											{{ form_errors(form.last_name) }}
+											{{ form_widget(form.last_name, {'attr': {'class': 'validate'}}) }}
+											{{ form_label(form.last_name) }}
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-md-6">
 										<div class="input-field">
-											<input required="required" name="email" type="email">
-											<label for="email">Email</label>
+											{{ form_widget(form.email, {'attr': {'class': 'validate'}}) }}
+											{{ form_label(form.email) }}
+											{{ form_errors(form.email) }}
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="input-field">
-											<input required="required" name="phone" type="tel">
-											<label for="phone">Phone Number</label>
+											{{ form_widget(form.phone, {'attr': {'class': 'validate'}}) }}
+											{{ form_label(form.phone) }}
+											{{ form_errors(form.phone) }}
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-md-12">
 										<div class="input-field">
-											<textarea class="materialize-textarea" required="required" name="message" cols="50" rows="10"></textarea>
-											<label for="message">Message</label>
+											{{ form_widget(form.message, {'attr': {'class': 'materialize-textarea'}}) }}
+											{{ form_label(form.message) }}
+											{{ form_errors(form.message) }}
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-xs-12 col-md-6 col-md-offset-3">
-										<button type="submit" name="submit" class="btn btn-block gradient primary waves-effect waves-light submit-button">
-											Send Message
-										</button>
+										{{ form_widget(form.send, {'attr': {'class': 'btn btn-block gradient primary waves-effect waves-light submit-button'}}) }}
 									</div>
 								</div>
 							</div>
 
 							<div class="col-xs-12 col-sm-12 col-md-4 contact-info mt-40">
-
 								<address>
 									<i class="material-icons brand-color">&#xE55F;</i>
 									<div class="address">
@@ -197,7 +205,8 @@ $(handler);
 						</div>
 					</div>
 				</section>
-			</form>
+			{{ form_end(form) }}
+			
 			<div id="myMap" class="height-350">Gmap here</div>
 
 		</div>
@@ -283,10 +292,10 @@ $(handler);
 {% endblock %}
 
 {% block script3 %}
-<script type="text/javascript">
+	<script type="text/javascript">
 
-	onAppReady(function () {
+		onAppReady(function () {
 $('.preload').remove();
 });
-</script>
+	</script>
 {% endblock %}

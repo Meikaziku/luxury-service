@@ -36,7 +36,8 @@ class JobOffer
     #[ORM\JoinColumn(nullable: false)]
     private ?JobType $job_type_id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Client::class)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Client $client = null;
 
     #[ORM\ManyToOne]
@@ -137,10 +138,9 @@ class JobOffer
         return $this->client;
     }
 
-    public function setClient(?Client $client): static
+    public function setClient(?Client $client): self
     {
         $this->client = $client;
-
         return $this;
     }
 

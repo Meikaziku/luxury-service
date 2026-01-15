@@ -1,2 +1,24 @@
 {% extends "@EasyAdmin/layout.html.twig" %}
 
+{% block content %}
+	<div class="dashboard">
+		<h1 class="title">Dashboard</h1>
+
+
+		<h5 class="">Candidats</h5>
+		<h2>{{ countCandidats }}</h2>
+
+
+		<h5 class="card-title">Clients</h5>
+		<h2>{{ countClients }}</h2>
+
+
+		<h5 class="card-title">Offres</h5>
+		<h2>{{ countJobOffers }}</h2>
+
+
+		<h5 class="card-title">Candidatures</h5>
+		<h2>{{ countApplications }}</h2>
+
+	</div>
+{% endblock %}
