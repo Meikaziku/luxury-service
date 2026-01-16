@@ -32,7 +32,6 @@
 				<div id="materialize-menu" class="menuzord">
 
 					<a class="brand logo-brand" href="{{ path('app_home') }}"></a>
-
 					<div id="mobile-menu">
 						<div class="nav-wrapper" id="toggle">
 							<span class="top"></span>
@@ -41,7 +40,7 @@
 						</div>
 						<div class="icon-wrapper">
 							{% if app.user %}
-								<span class="account">
+								<span class="account">					
 									<a href="{{ path('app_profil') }}">
 										<i class="material-icons">&#xE7FD;</i>
 									</a>
@@ -56,22 +55,27 @@
 										<a href="{{ path('app_home') }}">Home</a>
 									</li>
 									<li>
-										<a href="{{ path('app_home') }}">Jobs Offers</a>
+										<a href="{{ path('app_job_offer_index') }}">Jobs Offers</a>
 									</li>
 									<li>
-										<a href="{{ path('app_about_us') }}l">About Us</a>
+										<a href="{{ path('app_about_us') }}">About Us</a>
 									</li>
 									<li>
 										<a href="{{ path('app_contact') }}">Contact</a>
 									</li>
 
 									{% if app.user %}
-										<li>-</li>
+										{% if is_granted('ROLE_RECRUITER') %}
+											<li>
+												<a href="{{ path('pro') }}">Vos Informations</a>
+											</li>
+										{% else %}
+											<li>
+												<a href="{{ path('app_profil') }}">Profile</a>
+											</li>
+										{% endif %}
 										<li>
-											<a href="{{ path('app_profil') }}">Profile</a>
-										</li>
-										<li>
-											<a href="{{ path('app_logout') }}" class="btn bn-lg gradient secondary btn-block waves-effect waves-light btn-register">Logout</a>
+											<a href="{{ path('app_logout') }}" class="btn ...">Logout</a>
 										</li>
 									{% else %}
 										<li>
@@ -94,7 +98,7 @@
 								</a>
 							</li>
 							<li class="dropdown">
-								<a href="{{ path('app_home') }}">
+								<a href="{{ path('app_job_offer_index') }}">
 									<span>Jobs Offers</span>
 								</a>
 							</li>
@@ -110,11 +114,20 @@
 							</li>
 
 							{% if app.user %}
-								<li class="dropdown">
-									<a href="{{ path('app_profil') }}">
-										<span>Profile</span>
-									</a>
-								</li>
+								{% if is_granted('ROLE_RECRUITER') %}
+									<li class="dropdown">
+										<a href="{{ path('pro') }}">
+											<span>Vos Informations</span>
+										</a>
+									</li>
+								{% else %}
+									<li class="dropdown">
+										<a href="{{ path('app_profil') }}">
+											<span>Profile</span>
+										</a>
+									</li>
+								{% endif %}
+
 								<li class="dropdown">
 									<a href="{{ path('app_logout') }}" class="btn bn-lg gradient secondary btn-block waves-effect waves-light btn-register">
 										<span>Logout</span>

@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\JobOfferRepository;
+use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobOfferRepository::class)]
-class JobOffer
+class JobOffer 
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,38 +18,71 @@ class JobOffer
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    private ?string $reference = null;
+
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
+
     #[ORM\Column(length: 255)]
-    private ?string $job_title = null;
+    private ?string $jobTitle = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $closing_at = null;
-
-    #[ORM\Column]
-    private ?bool $is_active = null;
-
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $salary = null;
-
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'jobOffers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?JobType $job_type_id = null;
+    private ?JobType $jobType = null;
 
-    #[ORM\ManyToOne(targetEntity: Client::class)]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $jobLocation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobOffers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?JobCategory $category = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $closingAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $salary = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'jobOffers')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Client $client = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?JobCategory $job_category = null;
+    /**
+     * @var Collection<int, Candidature>
+     */
+    #[ORM\OneToMany(targetEntity: Candidature::class, mappedBy: 'jobOffer', orphanRemoval: true)]
+    private Collection $applications;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
+    public function __construct(DateTimeImmutable $createdAt = new DateTimeImmutable())
+    {
+        $this->createdAt = $createdAt;
+        $this->applications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(string $reference): static
+    {
+        $this->reference = $reference;
+
+        return $this;
     }
 
     public function getDescription(): ?string
@@ -61,74 +97,98 @@ class JobOffer
         return $this;
     }
 
-    public function getJobTitle(): ?string
+    public function isActive(): ?bool
     {
-        return $this->job_title;
+        return $this->isActive;
     }
 
-    public function setJobTitle(string $job_title): static
+    public function setIsActive(bool $isActive): static
     {
-        $this->job_title = $job_title;
+        $this->isActive = $isActive;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getJobTitle(): ?string
     {
-        return $this->created_at;
+        return $this->jobTitle;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setJobTitle(string $jobTitle): static
     {
-        $this->created_at = $created_at;
+        $this->jobTitle = $jobTitle;
+
+        return $this;
+    }
+
+    public function getJobType(): ?JobType
+    {
+        return $this->jobType;
+    }
+
+    public function setJobType(?JobType $jobType): static
+    {
+        $this->jobType = $jobType;
+
+        return $this;
+    }
+
+    public function getJobLocation(): ?string
+    {
+        return $this->jobLocation;
+    }
+
+    public function setJobLocation(?string $jobLocation): static
+    {
+        $this->jobLocation = $jobLocation;
+
+        return $this;
+    }
+
+    public function getCategory(): ?JobCategory
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?JobCategory $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
 
     public function getClosingAt(): ?\DateTimeImmutable
     {
-        return $this->closing_at;
+        return $this->closingAt;
     }
 
-    public function setClosingAt(\DateTimeImmutable $closing_at): static
+    public function setClosingAt(?\DateTimeImmutable $closingAt): static
     {
-        $this->closing_at = $closing_at;
+        $this->closingAt = $closingAt;
 
         return $this;
     }
 
-    public function isActive(): ?bool
-    {
-        return $this->is_active;
-    }
-
-    public function setIsActive(bool $is_active): static
-    {
-        $this->is_active = $is_active;
-
-        return $this;
-    }
-
-    public function getSalary(): ?string
+    public function getSalary(): ?int
     {
         return $this->salary;
     }
 
-    public function setSalary(string $salary): static
+    public function setSalary(?int $salary): static
     {
         $this->salary = $salary;
 
         return $this;
     }
 
-    public function getJobTypeId(): ?JobType
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->job_type_id;
+        return $this->createdAt;
     }
 
-    public function setJobTypeId(?JobType $job_type_id): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->job_type_id = $job_type_id;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -138,20 +198,51 @@ class JobOffer
         return $this->client;
     }
 
-    public function setClient(?Client $client): self
+    public function setClient(?Client $client): static
     {
         $this->client = $client;
+
         return $this;
     }
 
-    public function getJobCategory(): ?JobCategory
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
     {
-        return $this->job_category;
+        return $this->applications;
     }
 
-    public function setJobCategory(?JobCategory $job_category): static
+    public function addApplication(Candidature $application): static
     {
-        $this->job_category = $job_category;
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setJobOffer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Candidature $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getJobOffer() === $this) {
+                $application->setJobOffer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }
