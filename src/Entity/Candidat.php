@@ -47,8 +47,6 @@ class Candidat
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $place_of_birth = null;
 
-   
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $short_description = null;
 
@@ -71,6 +69,25 @@ class Candidat
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?User $user = null;
+
+    public function isComplete(): bool
+{
+    return
+        $this->first_name &&
+        $this->last_name &&
+        $this->adress &&
+        $this->country &&
+        $this->nationality &&
+        $this->passport_file &&
+        $this->cv &&
+        $this->profil_picture &&
+        $this->current_location &&
+        $this->date_of_birth &&
+        $this->short_description &&
+        $this->job_category &&
+        $this->experience &&
+        $this->gender_type ;
+}
 
     public function getId(): ?int
     {

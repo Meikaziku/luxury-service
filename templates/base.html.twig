@@ -40,7 +40,7 @@
 						</div>
 						<div class="icon-wrapper">
 							{% if app.user %}
-								<span class="account">					
+								<span class="account">
 									<a href="{{ path('app_profil') }}">
 										<i class="material-icons">&#xE7FD;</i>
 									</a>
@@ -152,6 +152,13 @@
 			</div>
 		</div>
 	</header>
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="alert alert-{{ label }}">
+				{{ message }}
+			</div>
+		{% endfor %}
+	{% endfor %}
 	<body id="top">
 		{% block body %}
 			<!-- Contenu principal -->

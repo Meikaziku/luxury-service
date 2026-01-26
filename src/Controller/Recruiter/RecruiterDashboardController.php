@@ -3,6 +3,7 @@
 namespace App\Controller\Recruiter;
 
 use App\Entity\Application;
+use App\Entity\Candidature;
 use App\Entity\Client;
 use App\Entity\JobOffer;
 use App\Entity\User;
@@ -81,6 +82,7 @@ class RecruiterDashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Job Offer', 'fa fa-briefcase');
         yield MenuItem::linkToCrud('Manage your jobs', 'fa fa-tasks', JobOffer::class);
+        yield MenuItem::linkToCrud('Manage candidacy', 'fa fa-tasks', Candidature::class);
         // TODO
         // yield MenuItem::linkToCrud('Applications', 'fa fa-user-check', Application::class);
 

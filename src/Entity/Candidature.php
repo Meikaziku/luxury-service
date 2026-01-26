@@ -16,18 +16,30 @@ class Candidature
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deleted_at = null;
 
     #[ORM\ManyToOne]
     private ?Candidat $candidat = null;
 
-    #[ORM\ManyToOne]
-    private ?JobOffer $job_offer = null;
+    #[ORM\ManyToOne(targetEntity: JobOffer::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?JobOffer $jobOffer = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?StatutCategory $statut = null;
+
+    public function getJobOffer(): ?JobOffer
+    {
+        return $this->jobOffer;
+    }
+
+    public function setJobOffer(?JobOffer $jobOffer): static
+    {
+        $this->jobOffer = $jobOffer;
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -66,18 +78,6 @@ class Candidature
     public function setCandidat(?Candidat $candidat): static
     {
         $this->candidat = $candidat;
-
-        return $this;
-    }
-
-    public function getJobOffer(): ?JobOffer
-    {
-        return $this->job_offer;
-    }
-
-    public function setJobOffer(?JobOffer $job_offer): static
-    {
-        $this->job_offer = $job_offer;
 
         return $this;
     }

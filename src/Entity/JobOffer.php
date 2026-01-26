@@ -10,7 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobOfferRepository::class)]
-class JobOffer 
+class JobOffer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -61,6 +61,11 @@ class JobOffer
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
+
+    public function __toString(): string
+    {
+        return $this->jobTitle ?? '';
+    }
 
     public function __construct(DateTimeImmutable $createdAt = new DateTimeImmutable())
     {

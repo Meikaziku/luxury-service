@@ -21,6 +21,11 @@ class StatutCategory
         return $this->id;
     }
 
+    public function __toString(): string
+    {
+        return $this->statut ? 'Actif' : 'Inactif';
+    }
+
     public function isStatut(): ?bool
     {
         return $this->statut;
