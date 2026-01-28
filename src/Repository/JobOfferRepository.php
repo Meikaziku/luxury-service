@@ -16,28 +16,51 @@ class JobOfferRepository extends ServiceEntityRepository
         parent::__construct($registry, JobOffer::class);
     }
 
-//    /**
-//     * @return JobOffer[] Returns an array of JobOffer objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('j')
-//            ->andWhere('j.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('j.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    
+    public function findPrevious(JobOffer $jobOffer): ?JobOffer
+    {
+        return $this->createQueryBuilder('j')
+            ->andWhere('j.id < :id')
+            ->setParameter('id', $jobOffer->getId())
+            ->orderBy('j.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-//    public function findOneBySomeField($value): ?JobOffer
-//    {
-//        return $this->createQueryBuilder('j')
-//            ->andWhere('j.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findNext(JobOffer $jobOffer): ?JobOffer
+    {
+        return $this->createQueryBuilder('j')
+            ->andWhere('j.id > :id')
+            ->setParameter('id', $jobOffer->getId())
+            ->orderBy('j.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    //    /**
+    //     * @return JobOffer[] Returns an array of JobOffer objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('j')
+    //            ->andWhere('j.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('j.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?JobOffer
+    //    {
+    //        return $this->createQueryBuilder('j')
+    //            ->andWhere('j.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

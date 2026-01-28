@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Candidat;
-use App\Entity\User;
+use App\Entity\Users;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
+use App\Repository\UsersRepository;
 use App\Security\EmailVerifier;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +28,7 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = new User();
+        $user = new Users();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -41,7 +41,7 @@ class RegistrationController extends AbstractController
 
             $candidat = new Candidat();
             $candidat->setUpdatedAt(new DateTimeImmutable());
-            $candidat->setUser($user);
+            $candidat->setUsers($user);
         
             $entityManager->persist($candidat);
             $entityManager->flush();
@@ -66,7 +66,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UsersRepository $userRepository): Response
     {
         $id = $request->query->get('id');
 

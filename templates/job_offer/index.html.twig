@@ -13,7 +13,7 @@
 	<meta
 	name="csrf-token" content="9Tnm0YBCxgVTxoqI1HzccsU5NuE9RughZmhpzgXn">
 	<!--  favicon -->
-	<link rel="shortcut icon" href="assets/img/ico/fav.png">
+	<link rel="shortcut icon" href="{{ asset('img/icone.png') }}">
 {% endblock %}
 
 
@@ -160,26 +160,29 @@ $(handler);
 												Details
 											</a>
 
-											{% set candidat = app.user.getCandidat() %}
-											{% set candidature_exist = candidat ? (job_offer.applications|filter(a => a.candidat.id == candidat.id)|length > 0) : false %}
+											{% set candidat = app.user ? app.user.getCandidat() : null %}
+											{% set candidature_exist = candidat
+    ? (job_offer.applications|filter(a => a.candidat.id == candidat.id)|length > 0)
+    : false
+%}
 
 											{% if app.user and candidat %}
 												{% if candidature_exist %}
-													<button class="btn btn-md grey waves-effect waves-light" disabled>
-														Candidature envoyée
+													<button class="btn btn-md black waves-effect waves-light" disabled>
+														Application sent
 													</button>
 												{% elseif not candidat.isComplete %}
-													<button class="btn btn-md orange waves-effect waves-light" disabled>
-														Complétez votre profil
+													<button class="btn btn-md black waves-effect waves-light" disabled>
+														Complete your profile to apply
 													</button>
 												{% else %}
-													<a class="btn btn-md primary waves-effect waves-light" href="{{ path('app_candidature_apply', { 'id': job_offer.id }) }}">
+													<a class="btn btn-md primary waves-effect waves-light" href="{{ path('app_candidature_apply', { id: job_offer.id }) }}">
 														Apply
 													</a>
 												{% endif %}
 											{% else %}
 												<a class="btn btn-md primary waves-effect waves-light" href="{{ path('app_login') }}">
-													Connectez-vous pour postuler
+													Log in to apply
 												</a>
 											{% endif %}
 										</div>

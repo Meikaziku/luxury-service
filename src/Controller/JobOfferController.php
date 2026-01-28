@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\JobOffer;
+use App\Entity\Users;
 use App\Form\JobOfferType;
+use App\Repository\CandidatureRepository;
 use App\Repository\JobCategoryRepository;
 use App\Repository\JobOfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,15 +49,50 @@ final class JobOfferController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_job_offer_show', methods: ['GET'])]
-    public function show(JobOffer $jobOffer): Response
-    {
-        
+    public function show(
+        JobOffer $jobOffer,
+        CandidatureRepository $candidatureRepository,
+        JobOfferRepository $jobOfferRepository
+    ): Response {
+        /** @var User|null $user */
+        $user = $this->getUser();
+        $hasAlreadyApplied = false;
+
+        if ($user instanceof Users && $user->getCandidat()) {
+            $candidat = $user->getCandidat();
+
+            $hasAlreadyApplied = $candidatureRepository->findOneBy([
+                'jobOffer' => $jobOffer,
+                'candidat' => $candidat,
+            ]) !== null;
+        }
+
+        // ⬅️ Offre précédente
+        $previous = $jobOfferRepository->createQueryBuilder('j')
+            ->andWhere('j.id < :id')
+            ->setParameter('id', $jobOffer->getId())
+            ->orderBy('j.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        // ➡️ Offre suivante
+        $next = $jobOfferRepository->createQueryBuilder('j')
+            ->andWhere('j.id > :id')
+            ->setParameter('id', $jobOffer->getId())
+            ->orderBy('j.id', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
         return $this->render('job_offer/show.html.twig', [
             'job_offer' => $jobOffer,
+            'hasAlreadyApplied' => $hasAlreadyApplied,
+            'previous' => $previous,
+            'next' => $next,
         ]);
-        
-    
     }
+
 
     #[Route('/{id}/edit', name: 'app_job_offer_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, JobOffer $jobOffer, EntityManagerInterface $entityManager): Response

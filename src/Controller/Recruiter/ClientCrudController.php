@@ -3,7 +3,7 @@
 namespace App\Controller\Recruiter;
 
 use App\Entity\Client;
-use App\Entity\User;
+use App\Entity\Users;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -52,7 +52,7 @@ class ClientCrudController extends AbstractCrudController
     public function createEntity(string $entityFqcn)
     {
         $client = new Client();
-        $client->setUser($this->security->getUser());
+        $client->setUsers($this->security->getUser());
         return $client;
     }
 
@@ -65,7 +65,7 @@ class ClientCrudController extends AbstractCrudController
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         $response = $this->entityRepository->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
-        $response->andWhere('entity.user = :user')->setParameter('user', $this->getUser());
+        $response->andWhere('entity.users = :users')->setParameter('users', $this->getUser());
 
         return $response;
     }

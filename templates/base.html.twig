@@ -117,7 +117,7 @@
 								{% if is_granted('ROLE_RECRUITER') %}
 									<li class="dropdown">
 										<a href="{{ path('pro') }}">
-											<span>Vos Informations</span>
+											<span>Recruiter Profile</span>
 										</a>
 									</li>
 								{% else %}
@@ -154,11 +154,37 @@
 	</header>
 	{% for label, messages in app.flashes %}
 		{% for message in messages %}
-			<div class="alert alert-{{ label }}">
+			<div class="flash-message {{ label }}">
 				{{ message }}
 			</div>
 		{% endfor %}
 	{% endfor %}
+
+	<script>
+		// Affiche le message puis le fait disparaître automatiquement
+document.addEventListener('DOMContentLoaded', function () {
+const flashes = document.querySelectorAll('.flash-message');
+flashes.forEach(flash => { // Positionner en bas de page
+flash.style.position = 'fixed';
+flash.style.bottom = '20px';
+flash.style.left = '50%';
+flash.style.transform = 'translateX(-50%)';
+flash.style.background = '#4CAF50'; // vert pour 'success'
+flash.style.color = 'white';
+flash.style.padding = '12px 24px';
+flash.style.borderRadius = '8px';
+flash.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+flash.style.zIndex = '9999';
+flash.style.transition = 'opacity 0.5s ease';
+
+// Faire disparaître après 3 secondes
+setTimeout(() => {
+flash.style.opacity = '0';
+setTimeout(() => flash.remove(), 500);
+}, 3000);
+});
+});
+	</script>
 	<body id="top">
 		{% block body %}
 			<!-- Contenu principal -->

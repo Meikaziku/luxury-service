@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Repository\StatutCategoryRepository;
+
 use App\Entity\Candidature;
 use App\Entity\JobOffer;
 use App\Entity\StatutCategory;
@@ -20,22 +22,20 @@ final class CandidatureController extends AbstractController
     #[Route('/apply/{id}', name: 'app_candidature_apply', methods: ['GET'])]
     public function apply(
         JobOffer $jobOffer,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        StatutCategoryRepository $statutCategoryRepository // <-- repository
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         /** @var User $user */
         $user = $this->getUser();
-
         $candidat = $user->getCandidat();
 
-        // ❌ Pas de profil candidat
         if (!$candidat) {
             $this->addFlash('danger', 'Vous devez créer votre profil candidat avant de postuler.');
             return $this->redirectToRoute('app_profil');
         }
 
-        // ❌ Profil incomplet
         if (!$candidat->isComplete()) {
             $this->addFlash(
                 'warning',
@@ -44,7 +44,7 @@ final class CandidatureController extends AbstractController
             return $this->redirectToRoute('app_profil');
         }
 
-        // 🔒 Empêcher les doublons
+        // Vérifie les doublons
         $existing = $entityManager->getRepository(Candidature::class)->findOneBy([
             'candidat' => $candidat,
             'jobOffer' => $jobOffer,
@@ -57,11 +57,18 @@ final class CandidatureController extends AbstractController
             ]);
         }
 
-        // ✅ Création candidature
+        // Création candidature
         $candidature = new Candidature();
         $candidature->setCandidat($candidat);
         $candidature->setJobOffer($jobOffer);
         $candidature->setCreatedAt(new \DateTimeImmutable());
+
+        // ⚡ Assigner le statut par défaut
+        $statut = $statutCategoryRepository->findOneBy(['statut' => 'En attente']); // Repository ici
+        if (!$statut) {
+            throw new \LogicException('Le statut "En attente" doit exister dans la base.');
+        }
+        $candidature->setStatut($statut);
 
         $entityManager->persist($candidature);
         $entityManager->flush();
@@ -72,7 +79,6 @@ final class CandidatureController extends AbstractController
             'id' => $jobOffer->getId()
         ]);
     }
-
 
     #[Route(name: 'app_candidature_index', methods: ['GET'])]
     public function index(CandidatureRepository $candidatureRepository): Response

@@ -5,7 +5,7 @@ namespace App\Controller\Recruiter;
 use App\Controller\Admin\JobCategoryCrudController;
 use App\Controller\Admin\JobTypeCrudController;
 use App\Entity\JobOffer;
-use App\Entity\User;
+use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -35,7 +35,7 @@ class JobOfferCrudController extends AbstractCrudController
     // All jobs created must be linked to the recruiter
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        /** @var User */
+        /** @var Users */
         $user = $this->getUser();
         $client = $user->getClient();
 

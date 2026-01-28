@@ -6,7 +6,7 @@ use App\Entity\Application;
 use App\Entity\Candidature;
 use App\Entity\Client;
 use App\Entity\JobOffer;
-use App\Entity\User;
+use App\Entity\Users;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -57,16 +57,16 @@ class RecruiterDashboardController extends AbstractDashboardController
             ->setFaviconPath('img/luxury-services-logo.png');
     }
 
+
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-tachometer-alt');
+        yield MenuItem::linkToRoute('Home', 'fa fa-home', "app_home");
 
         yield MenuItem::section('Fill your profile', 'fa fa-user-tie');
         
-        
 
-        /** @var User */
-        $user = $this->getUser();
+        /** @var Users */
+        $user = $this->getUser();  // ✅ Changé de getUsers() à getUser()
         $client = $user->getClient();
 
 

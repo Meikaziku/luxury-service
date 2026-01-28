@@ -33,7 +33,7 @@ class Client
 
     #[ORM\OneToOne(inversedBy: 'client', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private ?Users $users = null;
 
     public function getId(): ?int
     {
@@ -112,14 +112,14 @@ class Client
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUsers(): ?Users
     {
-        return $this->user;
+        return $this->users;
     }
 
-    public function setUser(User $user): static
+    public function setUsers(Users $users): static
     {
-        $this->user = $user;
+        $this->users = $users;
 
         return $this;
     }

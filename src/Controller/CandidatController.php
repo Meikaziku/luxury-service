@@ -15,12 +15,12 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/')]
 final class CandidatController extends AbstractController
 {
-    
+
 
     #[Route('/profil', name: 'app_profil', methods: ['GET', 'POST'])]
     public function edit(Request $request, EntityManagerInterface $entityManager, CandidatRepository $candidatRepository): Response
     {
-        $candidat = $candidatRepository->findOneBy(['user' => $this->getUser()]);
+        $candidat = $candidatRepository->findOneBy(['users' => $this->getUser()]);
         $form = $this->createForm(CandidatType::class, $candidat);
         $form->handleRequest($request);
 
@@ -33,9 +33,13 @@ final class CandidatController extends AbstractController
             return $this->redirectToRoute('app_profil');
         }
 
+        // Calcul du pourcentage de complétion
+        $completion = $candidat ? $candidat->getCompletionPercentage() : 0;
+
         return $this->render('candidat/new.html.twig', [
             'candidat' => $candidat,
             'form' => $form,
+            'completion' => $completion,
         ]);
     }
 

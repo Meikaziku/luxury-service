@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Client;
-use App\Entity\User;
+use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -34,7 +34,7 @@ class UserCrudController extends AbstractCrudController
 
     public static function getEntityFqcn(): string
     {
-        return User::class;
+        return Users::class;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -75,13 +75,13 @@ class UserCrudController extends AbstractCrudController
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if($entityInstance instanceof User){
+        if($entityInstance instanceof Users){
             $entityInstance->setRoles(['ROLE_RECRUITER']);
             $entityInstance->setIsVerified(true);
             $this->hashPassword($entityInstance);
 
             $client = new Client();
-            $client->setUser($entityInstance);
+            $client->setUsers($entityInstance);
             parent::persistEntity($entityManager, $client);
         }
 
@@ -96,7 +96,7 @@ class UserCrudController extends AbstractCrudController
     }
 
 
-    private function hashPassword(User $user): void
+    private function hashPassword(Users $user): void
     {
         if($user->getPassword()){
             $user->setPassword($this->passwordhasher->hashPassword($user, $user->getPassword()));

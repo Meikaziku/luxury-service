@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Users;
+use App\Controller\Admin\UsersCrudController;
 use App\Entity\Candidat;
 use App\Entity\Candidate;
 use App\Entity\Candidature;
@@ -14,7 +16,7 @@ use App\Entity\JobCategory;
 use App\Entity\JobOffer;
 use App\Entity\JobOfferType;
 use App\Entity\JobType;
-use App\Entity\User;
+
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -34,13 +36,13 @@ class DashboardController extends AbstractDashboardController
     {
         $this->entityManager = $entityManager;
     }
-    
+
     #[AttributeRoute('/admin', name: 'admin')]
     public function index(): Response
     {
 
         $countClients = $this->entityManager->getRepository(Client::class)->count([]);
-        $countCandidats = $this->entityManager->getRepository(User::class)->count([]);
+        $countCandidats = $this->entityManager->getRepository(Users::class)->count([]);
         $countJobOffers = $this->entityManager->getRepository(JobOffer::class)->count([]);
         $countApplications = $this->entityManager->getRepository(Candidature::class)->count([]);
 
@@ -78,21 +80,20 @@ class DashboardController extends AbstractDashboardController
             ->setFaviconPath('img/luxury-services-logo.png');
     }
 
-    public function configureMenuItems(): iterable
+     public function configureMenuItems(): iterable
     {
+        yield MenuItem::linkToRoute('Home', 'fa fa-home', "app_home");
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-tachometer-alt');
 
         yield MenuItem::section('Jobs');
-
         yield MenuItem::linkToCrud('Job Offer Types', 'fas fa-briefcase', JobType::class);
         yield MenuItem::linkToCrud('Categories', 'fas fa-tags', JobCategory::class);
 
         yield MenuItem::section('Candidates');
-
         yield MenuItem::linkToCrud('Candidates', 'fa fa-users', Candidat::class);
 
         yield MenuItem::section('Recruiters');
-
-        yield MenuItem::linkToCrud('Recruiters', 'fa fa-user-tie', User::class);
+        // ✅ Changé : Users au lieu de User
+        yield MenuItem::linkToCrud('Recruiters', 'fa fa-user-tie', Users::class);
     }
 }

@@ -67,27 +67,60 @@ class Candidat
     #[ORM\ManyToOne]
     private ?Gender $gender_type = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?User $user = null;
+    #[ORM\OneToOne(inversedBy: 'candidat', cascade: ['persist', 'remove'])]
+    private ?Users $users = null;
 
+
+    public function getCompletionPercentage(): int
+    {
+        // Liste des champs obligatoires
+        $fields = [
+            $this->first_name,
+            $this->last_name,
+            $this->adress,
+            $this->country,
+            $this->nationality,
+            $this->passport_file,
+            $this->cv,
+            $this->profil_picture,
+            $this->current_location,
+            $this->date_of_birth,
+            $this->short_description,
+            $this->job_category,
+            $this->experience,
+            $this->gender_type,
+        ];
+
+        $filled = 0;
+        $total = count($fields);
+
+        foreach ($fields as $value) {
+            if (!empty($value)) {
+                $filled++;
+            }
+        }
+
+        return (int) round(($filled / $total) * 100);
+    }
+    
     public function isComplete(): bool
-{
-    return
-        $this->first_name &&
-        $this->last_name &&
-        $this->adress &&
-        $this->country &&
-        $this->nationality &&
-        $this->passport_file &&
-        $this->cv &&
-        $this->profil_picture &&
-        $this->current_location &&
-        $this->date_of_birth &&
-        $this->short_description &&
-        $this->job_category &&
-        $this->experience &&
-        $this->gender_type ;
-}
+    {
+        return
+            $this->first_name &&
+            $this->last_name &&
+            $this->adress &&
+            $this->country &&
+            $this->nationality &&
+            $this->passport_file &&
+            $this->cv &&
+            $this->profil_picture &&
+            $this->current_location &&
+            $this->date_of_birth &&
+            $this->short_description &&
+            $this->job_category &&
+            $this->experience &&
+            $this->gender_type;
+    }
 
     public function getId(): ?int
     {
@@ -299,14 +332,14 @@ class Candidat
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUsers(): ?Users
     {
-        return $this->user;
+        return $this->users;
     }
 
-    public function setUser(?User $user): static
+    public function setUsers(?Users $users): static
     {
-        $this->user = $user;
+        $this->users = $users;
 
         return $this;
     }

@@ -2,24 +2,24 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\Candidat;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(mappedBy: 'user')]
+    #[ORM\OneToOne(mappedBy: 'users')]
     private ?Candidat $candidat = null;
 
     #[ORM\Column(length: 180)]
@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'users', cascade: ['persist', 'remove'])]
     private ?Client $client = null;
 
     public function getCandidat(): ?Candidat
@@ -163,8 +163,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setClient(Client $client): static
     {
         // set the owning side of the relation if necessary
-        if ($client->getUser() !== $this) {
-            $client->setUser($this);
+        if ($client->getUsers() !== $this) {
+            $client->setUsers($this);
         }
 
         $this->client = $client;
