@@ -41,6 +41,9 @@ final class ContactController extends AbstractController
 
         return $this->render('contact/index.html.twig', [
             'form' => $form->createView(),
+            'latitude' => 45.43791234535322,
+            'longitude' => 4.3810334843664,
+            
         ]);
     }
 }

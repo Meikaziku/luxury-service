@@ -51,7 +51,7 @@ class CandidatCrudController extends AbstractCrudController
             TextField::new('lastName', 'Nom'),
 
             // Email depuis User
-            EmailField::new('user.email', 'Email'),
+            EmailField::new('users.email', 'Email'),
 
             // Ville
             TextField::new('currentLocation', 'Ville'),
