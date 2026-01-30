@@ -61,21 +61,21 @@ L’administrateur dispose d’un **back-office EasyAdmin** :
 - **Email** : `leo.marchand@corp.com`
 - **Mot de passe** : `leoleo`
 
-##🚀 Installation du projet Luxury Service
+## 🚀 Installation du projet Luxury Service
 
 Suivez ces étapes pour lancer le projet en local :
 
-###1️⃣ Cloner le projet
+### 1️⃣ Cloner le projet
 ```bash
 git clone https://github.com/Meikaziku/luxury-service.git ./
 ```
 
-###2️⃣ Installer les dépendances
+### 2️⃣ Installer les dépendances
 ```bash
 composer install
 ```
 
-###3️⃣ Configurer l’environnement
+### 3️⃣ Configurer l’environnement
 
 Copier .env → .env.local :
 
@@ -88,17 +88,17 @@ Modifier DATABASE_URL :
 ```bash
 DATABASE_URL="mysql://user:password@127.0.0.1:3306/nom_de_la_db?serverVersion=8.0"
 ```
-###4️⃣ Créer la base de données
+### 4️⃣ Créer la base de données
 ```bash
 symfony console doctrine:database:create
 ```
 
-###5️⃣ Appliquer les migrations
+### 5️⃣ Appliquer les migrations
 ```bash
 symfony console doctrine:migrations:migrate
 ```
 
-###6️⃣ Lancer le serveur local
+### 6️⃣ Lancer le serveur local
 ```bash
 symfony server:start
 ```
@@ -106,8 +106,9 @@ symfony server:start
 
 Accédez ensuite au site via : http://adresseIp
 
-###7️⃣ Créer un compte administrateur
+### 7️⃣ Créer un compte administrateur
 
 La base de données est vide : vous devez créer un compte admin et lui attribuer le rôle ROLE_ADMIN pour accéder au panel admin.
+
 
 
